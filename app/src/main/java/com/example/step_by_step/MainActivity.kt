@@ -2,6 +2,7 @@ package com.example.step_by_step
 
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.wifi.p2p.WifiP2pManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -11,46 +12,26 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
         //////////////    MyReceiver   ////////////////
 
-
-        registerReceiver(MyReceiver(),IntentFilter(MyReceiver.MY_RECEIVER_ACTION))
-        val intent = Intent(this, MyService::class.java)
-        startService(intent)
-
+        registerReceiver(MyReceiver(), IntentFilter(MyReceiver.MY_RECEIVER_ACTION))
 
         //////////////    Service     ////////////////////
-
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
             Intent(this, MyService::class.java).also {
                 startService(it)
+                supportFragmentManager.beginTransaction().apply {
+                    replace(
+                        R.id.fragment,
+                        FragmentBlank.newInstance(MyService.resultsofServiceCalculation)
+                    )
+                    commit()
+                }
             }
+
+
         }
-
-        val button1 = findViewById<Button>(R.id.button1)
-        button1.setOnClickListener {
-//            Intent(this, MyService::class.java).also {
-//                stopService(it)
-/*
-            val intent = Intent()
-            intent.putExtra(MyReceiver.MY_RECEIVER_MESSAGE, "AOKDJASj")
-            intent.action=MyReceiver.MY_RECEIVER_ACTION
-            sendBroadcast(intent)
-*/
-            }
-        }
-
-    //////////////    BroadcustResiver ////////////////////
-
-//        IntentFilter(Intent.ACTION_DEFAULT).also {
-//
-//            registerReceiver(MyReceiver(), it)
-//        }
-//    }
-
-
 
     }
-//}
+}
